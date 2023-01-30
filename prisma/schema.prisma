@@ -1,0 +1,37 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Tags {
+  id     Int      @id @default(autoincrement())
+  name   String   @unique
+  textos Textos[]
+
+  @@map("tags")
+}
+
+model MindStates {
+  id     Int      @default(autoincrement())
+  name   String   @unique
+  textos Textos[]
+
+  @@map("mindStates")
+}
+
+model Textos {
+  id          Int        @id @default(autoincrement())
+  date        DateTime?  @default(now()) @db.Timestamp(6)
+  title       String
+  description String
+  tagName     String
+  tag         Tags       @relation(fields: [tagName], references: [name]) //FK
+  nameState   String
+  mindState   MindStates @relation(fields: [nameState], references: [name]) //FK
+
+  @@map("textos")
+}
